@@ -1,5 +1,6 @@
 package ro.code4.deurgenta.helper
 
+import android.animation.ObjectAnimator
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -8,10 +9,13 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Bundle
+import android.util.Patterns
 import android.view.MotionEvent
 import android.view.View
+import android.view.animation.LinearInterpolator
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.ImageView
 import androidx.annotation.IdRes
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -21,6 +25,11 @@ import com.google.gson.Gson
 fun Activity.startActivityWithoutTrace(activity: Class<*>) {
     startActivity(Intent(this, activity))
     finishAffinity()
+}
+
+fun Fragment.startActivityWithoutTrace(activity: Class<*>) {
+    startActivity(Intent(this.activity, activity))
+    this.activity?.finishAffinity()
 }
 
 fun FragmentManager.replaceFragment(
@@ -53,7 +62,8 @@ fun Context.isOnline(): Boolean {
             val nc = cm.getNetworkCapabilities(n)
             //It will check for both wifi and cellular network
             return nc!!.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) || nc.hasTransport(
-                NetworkCapabilities.TRANSPORT_WIFI)
+                NetworkCapabilities.TRANSPORT_WIFI
+            )
         }
         return false
     } else {
@@ -62,10 +72,13 @@ fun Context.isOnline(): Boolean {
     }
 }
 
-
 fun <T> String.fromJson(gson: Gson, clazz: Class<T>): T {
     return gson.fromJson(this, clazz)
 }
+
+fun String.isValidEmail() = !isNullOrEmpty() && Patterns.EMAIL_ADDRESS.matcher(this).matches()
+
+fun String?.isEmptyField() = isNullOrBlank()
 
 /*
  *  Hide software keyboard if user taps outside the EditText
@@ -82,8 +95,10 @@ fun collapseKeyboardIfFocusOutsideEditText(
             val srcCoordinates = IntArray(2)
             oldFocusedView.getLocationOnScreen(srcCoordinates)
 
-            val rect = Rect(srcCoordinates[0], srcCoordinates[1], srcCoordinates[0] +
-                    oldFocusedView.width, srcCoordinates[1] + oldFocusedView.height)
+            val rect = Rect(
+                srcCoordinates[0], srcCoordinates[1], srcCoordinates[0] +
+                        oldFocusedView.width, srcCoordinates[1] + oldFocusedView.height
+            )
 
             if (rect.contains(motionEvent.x.toInt(), motionEvent.y.toInt()))
                 return
@@ -97,3 +112,11 @@ fun collapseKeyboardIfFocusOutsideEditText(
             ?.hideSoftInputFromWindow(newFocusedView.windowToken, 0)
     }
 }
+
+fun ImageView.setToRotateIndefinitely(): ObjectAnimator =
+    ObjectAnimator.ofFloat(this, "rotation", 0f, 360f).apply {
+        repeatCount = ObjectAnimator.INFINITE
+        duration = 2000
+        interpolator = LinearInterpolator()
+        repeatMode = ObjectAnimator.RESTART
+    }

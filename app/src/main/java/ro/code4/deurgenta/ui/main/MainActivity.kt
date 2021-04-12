@@ -18,7 +18,7 @@ import org.koin.android.viewmodel.ext.android.viewModel
 import ro.code4.deurgenta.R
 import ro.code4.deurgenta.helper.startActivityWithoutTrace
 import ro.code4.deurgenta.ui.base.BaseActivity
-import ro.code4.deurgenta.ui.login.LoginActivity
+import ro.code4.deurgenta.ui.auth.AuthActivity
 
 class MainActivity : BaseActivity<MainViewModel>() {
     override val layout: Int
@@ -39,7 +39,7 @@ class MainActivity : BaseActivity<MainViewModel>() {
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_home,
+                R.id.nav_home, R.id.nav_item_backpack
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -51,7 +51,7 @@ class MainActivity : BaseActivity<MainViewModel>() {
         navView.setCheckedItem(R.id.nav_home)
 
         viewModel.onLogoutLiveData().observe(this, Observer {
-            startActivityWithoutTrace(LoginActivity::class.java)
+            startActivityWithoutTrace(AuthActivity::class.java)
         })
     }
 

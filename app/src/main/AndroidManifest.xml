@@ -16,18 +16,11 @@
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
 
         <activity
-            android:name="ro.code4.deurgenta.ui.login.LoginActivity"
+            android:name="ro.code4.deurgenta.ui.auth.AuthActivity"
             android:label="@string/app_name"
-            android:noHistory="true"
+            android:noHistory="false"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
-
-        <activity
-                android:name="ro.code4.deurgenta.ui.register.RegisterActivity"
-                android:label="@string/app_name"
-                android:noHistory="false"
-                android:theme="@style/AppTheme.NoActionBar"
-                android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name="ro.code4.deurgenta.ui.main.MainActivity"
@@ -47,7 +40,7 @@
         <activity
             android:name="ro.code4.deurgenta.ui.splashscreen.SplashScreenActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme.NoActionBar.Splashscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
